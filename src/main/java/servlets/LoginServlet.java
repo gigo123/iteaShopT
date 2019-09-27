@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dao.DaoFactory;
+import dao.ProductDAO;
+import dao.UserDAO;
+import mySql.MySQLDAOFactory;
 import ua.itea.DBPrepStatement;
 
 /**
@@ -76,10 +80,9 @@ public class LoginServlet extends HttpServlet {
 
 	private boolean checkCredials(String login, String password) {
 		boolean loginFailded = true;
-		DBPrepStatement db = new DBPrepStatement();
-		db.openDatabase();
-		if (db.isConectionSuccsess()) {
-			if (db.checkLoginPasswords(login, password)) {
+		DaoFactory df = new MySQLDAOFactory();
+		 UserDAO uersDAO = df.getUserDAO();
+			if (uersDAO.checkLoginPasswords(login, password)) {
 				errorCounter = 0;
 				loginFailded = false;
 			} else {
@@ -87,8 +90,6 @@ public class LoginServlet extends HttpServlet {
 				loginFailded = true;
 				checkBlock();
 			}
-		}
-		db.closeConection();
 		return loginFailded;
 	}
 

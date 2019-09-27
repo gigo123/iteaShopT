@@ -654,9 +654,6 @@
 		if(state.window_width  > 991){ 
 			state.stickyHeader();
 		}
-    });
-
-
-
+	    });
 
 })(jQuery);

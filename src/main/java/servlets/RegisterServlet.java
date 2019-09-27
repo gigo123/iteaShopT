@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dao.DaoFactory;
+import dao.UserDAO;
 import models.User;
+import mySql.MySQLDAOFactory;
 import ua.itea.DBPrepStatement;
 
 /**
@@ -21,8 +24,8 @@ public class RegisterServlet extends HttpServlet {
 	private boolean error = false;
 	private boolean createUser = false;
 	private StringBuilder errorText;
-	private DBPrepStatement db;
 	private User user;
+	private UserDAO uersDAO;
 
 	public User getUser() {
 		return user;
@@ -62,13 +65,11 @@ public class RegisterServlet extends HttpServlet {
 
 			}
 		} else if (session.getAttribute("login") != null) {
-			db = new DBPrepStatement();
-			db.openDatabase();
-			if (db.isConectionSuccsess()) {
+			DaoFactory df = new MySQLDAOFactory();
+			 uersDAO = df.getUserDAO();
 				System.out.println("read from db");
-				user = db.readUserFromLogin(session.getAttribute("login").toString());
-			}
-			db.closeConection();
+				user = uersDAO.getUserByLogin(session.getAttribute("login").toString());
+		
 			request.setAttribute("login", true);
 		} else {
 			user = new User();
@@ -99,25 +100,24 @@ public class RegisterServlet extends HttpServlet {
 		String comment = request.getParameter("comment");
 		String acceptOffer = request.getParameter("acceptOffer");
 		user = new User(login, password, name, region, convertGenderToBool(gender), comment);
-		db = new DBPrepStatement();
-		db.openDatabase();
-
-		if (db.isConectionSuccsess()) {
+		DaoFactory df = new MySQLDAOFactory();
+		 uersDAO = df.getUserDAO();
 			checkErrors(session, password2, acceptOffer);
 			if (!error) {
 				if (session.getAttribute("login") != null) {
-					db.updateUser(user, session.getAttribute("login").toString());
+					if(!uersDAO.updateUser(user, session.getAttribute("login").toString())) {
+						error = true;
+						errorText.append("<li>DataBase error</li>");
+					};
 				} else {
-					db.insertUser(user);
+					if(!uersDAO.insertUser(user)) {
+						error = true;
+						errorText.append("<li>DataBase error</li>");
+					}
 				}
 				createUser = true;
 				session.setAttribute("login", login);
 			}
-		} else {
-			error = true;
-			errorText.append("<li> DataBase conecrion error</li>");
-		}
-		db.closeConection();
 		doGet(request, response);
 	}
 
@@ -147,10 +147,6 @@ public class RegisterServlet extends HttpServlet {
 			error = true;
 			errorText.append("<li> you not accept offer </li>");
 		}
-		if (!db.isConectionSuccsess()) {
-			error = true;
-			errorText.append("<li>DateBase error</li>");
-		}
 	}
 
 	private void checkLogin(String login) {
@@ -159,7 +155,7 @@ public class RegisterServlet extends HttpServlet {
 			errorText.append("<li>Login field is empty</li>");
 			return;
 		}
-		if (db.selectEmail(login)) {
+		if (uersDAO.selectEmail(login)) {
 			error = true;
 			errorText.append("<li>this email is alredy in use</li>");
 		}

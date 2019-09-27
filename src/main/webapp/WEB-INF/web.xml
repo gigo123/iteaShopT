@@ -10,6 +10,18 @@
   	<description></description>
   	<servlet-class>servlets.LoginServlet</servlet-class>
   </servlet>
+   <servlet>
+  <servlet-name>ProductServlet</servlet-name>
+  	<display-name>ProductServlet</display-name>
+  	<description></description>
+  	<servlet-class>servlets.ProductServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>CartServlet</servlet-name>
+  	<display-name>CartServlet</display-name>
+  	<description></description>
+  	<servlet-class>servlets.CartServlet</servlet-class>
+  </servlet>
   <servlet>
   	<servlet-name>RegisterServlet</servlet-name>
   	<display-name>RegisterServlet</display-name>
@@ -33,5 +45,14 @@
   <servlet-mapping>
   	<servlet-name>LogoutServlet</servlet-name>
   	<url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+  	<servlet-name>ProductServlet</servlet-name>
+  	<url-pattern>/product</url-pattern>
+  	
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>CartServlet</servlet-name>
+  	<url-pattern>/cart</url-pattern>
   </servlet-mapping>
 </web-app>
