@@ -20,11 +20,21 @@
 			</tr>
 			<tr>
 				<td>price:${product.price}</td>
-				<td>
-				<form action = "./cart" method = "post"><input type = "hidden" name ="productToBuy" value ="${product.id}" /> 
-				<input type="submit" value="buy" />
-				
-			</form></td></tr>
+				<td><c:choose>
+						<c:when test="${page.equals('cart')}">
+							<form action="./cart" method="post">
+								<input type="hidden" name="productToRemove"
+									value="${product.id}" /> <input type="submit" value="remove" />
+							</form>
+						</c:when>
+						<c:otherwise>
+							<form action="./cart" method="post">
+								<input type="hidden" name="productToBuy" value="${product.id}" />
+								<input type="submit" value="buy" />
+							</form>
+						</c:otherwise>
+					</c:choose></td>
+			</tr>
 		</table>
 		<br>
 		<br>

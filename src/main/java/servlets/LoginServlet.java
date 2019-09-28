@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import dao.DaoFactory;
 import dao.ProductDAO;
 import dao.UserDAO;
+import models.User;
 import mySql.MySQLDAOFactory;
 import ua.itea.DBPrepStatement;
 
@@ -50,10 +51,11 @@ public class LoginServlet extends HttpServlet {
 			}
 		}
 		if (session.getAttribute("login") != null) {
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/HelloUserView.jsp");
-			request.setAttribute("loginName", session.getAttribute("login"));
-			request.setAttribute("login", true);
-			rd.forward(request, response);
+			DaoFactory df = new MySQLDAOFactory();
+			 UserDAO uersDAO = df.getUserDAO();
+			 User user = uersDAO.getUserByLogin((String) session.getAttribute("login"));
+			session.setAttribute("userName", user.getName() );
+			response.sendRedirect("./product");
 
 		} else {
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/LoginView.jsp");

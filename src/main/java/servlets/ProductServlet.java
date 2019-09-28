@@ -50,8 +50,18 @@ public class ProductServlet extends HttpServlet {
 		}
 		if (session.getAttribute("login") != null) {	
 			request.setAttribute("login", true);
+			request.setAttribute("userName", session.getAttribute("userName"));
+		}
+		if(session.getAttribute("cart")!=null) {	
+			if(session.getAttribute("cart_number")!=null) {
+				request.setAttribute("items", session.getAttribute("cart_number"));
+			}
+		}
+		else {
+			request.setAttribute("items", 0);
 		}
 		request.setAttribute("productList", products);
+		request.setAttribute("page", "product");
 		rd.forward(request, response);
 	}
 

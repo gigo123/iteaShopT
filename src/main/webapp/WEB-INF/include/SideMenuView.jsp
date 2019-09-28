@@ -10,6 +10,12 @@
 					<div class="user-dashboard-tab flex-column flex-md-row">
 						<div class="user-dashboard-tab__head nav flex-md-column"
 							role="tablist" aria-orientation="vertical">
+							<c:if test="${login}">
+								<div class="cart-side-menu">
+									Hello ${userName} <br /> you have ${items} goods in cart
+								</div>
+							</c:if>
+
 							<a class="nav-link active" data-toggle="pill" role="tab"
 								href="#dashboard" aria-controls="dashboard" aria-selected="true">Dashboard</a>
 							<a class="nav-link" data-toggle="pill" role="tab" href="#orders"
