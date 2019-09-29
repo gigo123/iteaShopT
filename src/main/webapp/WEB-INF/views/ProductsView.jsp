@@ -6,6 +6,7 @@
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
 <%@ include file="/WEB-INF/include/BreadcrumbView.jsp"%>
 <%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
+<div class="col-lg-9">
 <h1>Product page</h1>
 <div>
 	<c:forEach var="product" items="${requestScope.productList}">
@@ -40,9 +41,8 @@
 		<br>
 	</c:forEach>
 </div>
+</div>
 <!--  close div of SideMenuView -->
-</div>
-</div>
 </div>
 </div>
 </div>

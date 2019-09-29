@@ -25,6 +25,7 @@ import mySql.MySQLProductDAO;
  */
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private HttpSession session;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -41,15 +42,14 @@ public class CartServlet extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/ProductsView.jsp");
+		session = request.getSession();
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/CartView.jsp");
 		if (session.getAttribute("login") != null) {
 			request.setAttribute("login", true);
 			request.setAttribute("userName", session.getAttribute("userName"));
 		}
 		if (session.getAttribute("cart") != null) {
 			Map<Long, Integer> cartMap = (Map<Long, Integer>) session.getAttribute("cart");
-			// List<Integer> list = new ArrayList<Integer>(cartMap.values());
 			List<Product> products = new ArrayList<Product>();
 			List<Integer> quantity = new ArrayList<Integer>();
 			DaoFactory df = new MySQLDAOFactory();
@@ -77,84 +77,55 @@ public class CartServlet extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		session = request.getSession();
 		if (request.getParameter("productToBuy") != null) {
-			long productId = Integer.parseInt(request.getParameter("productToBuy"));
-			DaoFactory df = new MySQLDAOFactory();
-			ProductDAO pd = df.getProductDAO();
-			Product product = pd.getProductById(productId);
-			HttpSession session = request.getSession();
-			// List<Product> products;
-			Map<Long, Integer> cartMap;
-			if (session.getAttribute("cart") != null) {
+			cartMapProcessed("buy", Integer.parseInt(request.getParameter("productToBuy")));
 
-				cartMap = (Map<Long, Integer>) session.getAttribute("cart");
-			} else {
-				cartMap = new HashMap<Long, Integer>();
-			}
-			boolean inCart = false;
-			for (long key : cartMap.keySet()) {
-				if (key == productId) {
-					cartMap.put(key, (int) cartMap.get(key) + 1);
-					inCart = true;
-				}
-			}
-			if (!inCart) {
-				cartMap.put(productId, 1);
-			}
-		
-
-			/*
-			 * Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator();
-			 * while (entries.hasNext()) { Map.Entry<String, String> entry = entries.next();
-			 * System.out.println("ID = " + entry.getKey() + " День недели = " +
-			 * entry.getValue()); }
-			 * 
-			 * System.out.println();
-			 * 
-			 * // keySet - возвращает множество ключей
-			 * 
-			 * for (String key : map.keySet()) { System.out.println("ID = " + key +
-			 * ", День недели = " + map.get(key)); }
-			 */
-			session.setAttribute("cart", cartMap);
-			session.setAttribute("cart_number",productsCount(cartMap));
 			response.sendRedirect("./product");
 		}
 		if (request.getParameter("productToRemove") != null) {
-			long productId = Integer.parseInt(request.getParameter("productToRemove"));
-			DaoFactory df = new MySQLDAOFactory();
-			ProductDAO pd = df.getProductDAO();
-			Product product = pd.getProductById(productId);
-			HttpSession session = request.getSession();
-			// List<Product> products;
-			// products = (List<Product>) session.getAttribute("cart");
-
-			// products.remove(product);
-			Map<Long, Integer> cartMap;
-			if (session.getAttribute("cart") != null) {
-
-				cartMap = (Map<Long, Integer>) session.getAttribute("cart");
-
-				for (long key : cartMap.keySet()) {
-					if (key == productId) {
-						cartMap.remove(key);
-					}
-				}
-				session.setAttribute("cart", cartMap);
-				session.setAttribute("cart_number", productsCount(cartMap));
-				System.out.println("remove product");
-				doGet(request, response);
-			}
+			System.out.println("remove");
+			cartMapProcessed("remove", Integer.parseInt(request.getParameter("productToRemove")));
+			doGet(request, response);
 		}
 	}
-	
-	private int  productsCount(	Map<Long, Integer> cartMap) {
-		ArrayList<Integer> numbers =  new ArrayList<Integer>(cartMap.values());
-		int sum =0 ;
+
+	@SuppressWarnings("unchecked")
+	private void cartMapProcessed(String type, long productId) {
+		Map<Long, Integer> cartMap;
+		if (session.getAttribute("cart") != null) {
+
+			cartMap = (Map<Long, Integer>) session.getAttribute("cart");
+		} else{
+			cartMap = new HashMap<Long, Integer>();
+		}
+		boolean inCart = false;
+		for (long key : cartMap.keySet()) {
+			if (key == productId) {
+				if (type.equals("remove")) {
+						cartMap.remove(key);	
+						System.out.println("remove in medod");
+				} else {
+					cartMap.put(key, (int) cartMap.get(key) + 1);
+					inCart = true;
+				}
+				break;
+			}
+		}
+		if (!inCart) {
+			cartMap.put(productId, 1);
+		}
+		session.setAttribute("cart", cartMap);
+		session.setAttribute("cart_number",productsCount(cartMap));
+		return;
+	}
+
+	private int productsCount(Map<Long, Integer> cartMap) {
+		ArrayList<Integer> numbers = new ArrayList<Integer>(cartMap.values());
+		int sum = 0;
 		for (int n : numbers) {
-			 sum = sum +n;
-	       }
+			sum = sum + n;
+		}
 		return sum;
 	}
 

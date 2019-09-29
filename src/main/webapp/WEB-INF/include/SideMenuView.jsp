@@ -6,7 +6,7 @@
 	<div class="page-content-inner ptb--80 ptb-md--60 pb-sm--55">
 		<div class="container">
 			<div class="row">
-				<div class="col-12">
+				<div class="col-3">
 					<div class="user-dashboard-tab flex-column flex-md-row">
 						<div class="user-dashboard-tab__head nav flex-md-column"
 							role="tablist" aria-orientation="vertical">
@@ -30,6 +30,6 @@
 								<a class="nav-link" href="./cart">Cart</a>
 								<a class="nav-link" href="./login">Login</a>
 								<a class="nav-link" href="./register">Register</a>
-						</div>
-						<div class="user-dashboard-tab__content tab-content">
-							<div class="tab-pane fade show active" id="dashboard">
+						</div>	
+</div>
+</div>	
