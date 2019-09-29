@@ -67,7 +67,6 @@ public class RegisterServlet extends HttpServlet {
 		} else if (session.getAttribute("login") != null) {
 			DaoFactory df = new MySQLDAOFactory();
 			 uersDAO = df.getUserDAO();
-				System.out.println("read from db");
 				user = uersDAO.getUserByLogin(session.getAttribute("login").toString());
 		
 			request.setAttribute("login", true);

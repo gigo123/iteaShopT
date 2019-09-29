@@ -15,7 +15,7 @@
 				<td width="400"></td>
 			</tr>
 			<tr>
-				<td><img src="./productImage/${product.id}.png" height="200"></td>
+				<td><img src="./productImage/${product.id}.JPG" height="200"></td>
 				<td>${product.description}</td>
 			</tr>
 			<tr>

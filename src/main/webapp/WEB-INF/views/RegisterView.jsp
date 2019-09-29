@@ -27,8 +27,7 @@ ${errorText}
 					class="required">*</span></label> <input type="password" name="password"
 					class="form__input" required id="password"
 					placeholder="type password here"
-					pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]{8,}"
-					value="${user.password}" >
+					pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]{8,}">
 			</div>
 		</div>
 	</div>
@@ -39,8 +38,7 @@ ${errorText}
 					password<span class="required">*</span>
 				</label> <input type="password" name="password2" required id="password2"
 					class="form__input" placeholder="type password here"
-					pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]{8,}"
-					value="${user.password}" >
+					pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]{8,}" >
 			</div>
 		</div>
 	</div>

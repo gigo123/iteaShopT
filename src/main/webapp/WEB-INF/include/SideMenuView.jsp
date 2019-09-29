@@ -16,18 +16,20 @@
 								</div>
 							</c:if>
 
-							<a class="nav-link active" data-toggle="pill" role="tab"
-								href="#dashboard" aria-controls="dashboard" aria-selected="true">Dashboard</a>
-							<a class="nav-link" data-toggle="pill" role="tab" href="#orders"
-								aria-controls="orders" aria-selected="true">Orders</a> <a
-								class="nav-link" data-toggle="pill" role="tab" href="#downloads"
-								aria-controls="downloads" aria-selected="true">Downloads</a> <a
-								class="nav-link" data-toggle="pill" role="tab" href="#addresses"
-								aria-controls="addresses" aria-selected="true">Addresses</a> <a
-								class="nav-link" data-toggle="pill" role="tab"
-								href="#accountdetails" aria-controls="accountdetails"
-								aria-selected="true">Account Details</a> <a class="nav-link"
-								href="login-register.html">Logout</a>
+							<a class="nav-link active" 
+								href="./product">Home</a>
+							<a class="nav-link"  href="./product"
+								aria-controls="orders" aria-selected="true">Shop</a> <a
+								class="nav-link" data-toggle="pill" role="tab" href="./product?category=1"
+								aria-controls="downloads" aria-selected="true">Iphone</a> 
+								<a class="nav-link" data-toggle="pill" role="tab" href="./product?category=2"
+								aria-controls="addresses" aria-selected="true">Ipad</a> 
+								<a class="nav-link" data-toggle="pill" role="tab"
+								href="./product?category=3" aria-controls="accountdetails"
+								aria-selected="true">Watch</a> 
+								<a class="nav-link" href="./cart">Cart</a>
+								<a class="nav-link" href="./login">Login</a>
+								<a class="nav-link" href="./register">Register</a>
 						</div>
 						<div class="user-dashboard-tab__content tab-content">
 							<div class="tab-pane fade show active" id="dashboard">
