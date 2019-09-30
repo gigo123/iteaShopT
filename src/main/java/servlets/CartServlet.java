@@ -80,11 +80,9 @@ public class CartServlet extends HttpServlet {
 		session = request.getSession();
 		if (request.getParameter("productToBuy") != null) {
 			cartMapProcessed("buy", Integer.parseInt(request.getParameter("productToBuy")));
-
 			response.sendRedirect("./product");
 		}
 		if (request.getParameter("productToRemove") != null) {
-			System.out.println("remove");
 			cartMapProcessed("remove", Integer.parseInt(request.getParameter("productToRemove")));
 			doGet(request, response);
 		}
@@ -104,11 +102,11 @@ public class CartServlet extends HttpServlet {
 			if (key == productId) {
 				if (type.equals("remove")) {
 						cartMap.remove(key);	
-						System.out.println("remove in medod");
-				} else {
+				} 
+				if(type.equals("buy")){
 					cartMap.put(key, (int) cartMap.get(key) + 1);
-					inCart = true;
 				}
+				inCart = true;
 				break;
 			}
 		}

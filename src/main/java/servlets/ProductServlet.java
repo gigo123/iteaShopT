@@ -43,8 +43,11 @@ public class ProductServlet extends HttpServlet {
 		DaoFactory df = new MySQLDAOFactory();
 		ProductDAO pd = df.getProductDAO();
 		if (request.getParameter("category") != null) {
+			System.out.println("product");
 			category = Integer.parseInt(request.getParameter("category"));
+			System.out.println(category);
 			products = pd.getProductByCategory(category);
+			System.out.println(products);
 		} else {
 			products = pd.getProductList();
 		}

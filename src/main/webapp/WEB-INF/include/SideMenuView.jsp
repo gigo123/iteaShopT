@@ -10,26 +10,23 @@
 					<div class="user-dashboard-tab flex-column flex-md-row">
 						<div class="user-dashboard-tab__head nav flex-md-column"
 							role="tablist" aria-orientation="vertical">
-							<c:if test="${login}">
-								<div class="cart-side-menu">
-									Hello ${userName} <br /> you have ${items} goods in cart
-								</div>
-							</c:if>
-
-							<a class="nav-link active" 
-								href="./product">Home</a>
-							<a class="nav-link"  href="./product"
-								aria-controls="orders" aria-selected="true">Shop</a> <a
-								class="nav-link" data-toggle="pill" role="tab" href="./product?category=1"
-								aria-controls="downloads" aria-selected="true">Iphone</a> 
-								<a class="nav-link" data-toggle="pill" role="tab" href="./product?category=2"
-								aria-controls="addresses" aria-selected="true">Ipad</a> 
-								<a class="nav-link" data-toggle="pill" role="tab"
+							<div class="cart-side-menu">
+								<c:if test="${login}">
+									Hello ${userName} <br />
+								</c:if>
+								you have ${items} goods in cart
+							</div>
+							<a class="nav-link active" href="./product">Home</a> <a
+								class="nav-link" href="./product" aria-controls="orders"
+								aria-selected="true">Shop</a> <a class="nav-link"
+								href="./product?category=1" aria-controls="downloads"
+								aria-selected="true">Iphone</a> <a class="nav-link"
+								href="./product?category=2" aria-controls="addresses"
+								aria-selected="true">Ipad</a> <a class="nav-link"
 								href="./product?category=3" aria-controls="accountdetails"
-								aria-selected="true">Watch</a> 
-								<a class="nav-link" href="./cart">Cart</a>
-								<a class="nav-link" href="./login">Login</a>
-								<a class="nav-link" href="./register">Register</a>
-						</div>	
-</div>
-</div>	
+								aria-selected="true">Watch</a> <a class="nav-link" href="./cart">Cart</a>
+							<a class="nav-link" href="./login">Login</a> <a class="nav-link"
+								href="./register">Register</a>
+						</div>
+					</div>
+				</div>
