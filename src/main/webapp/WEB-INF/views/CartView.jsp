@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page isELIgnored="false"%>
-
 <%@ include file="/WEB-INF/include/HeaderView.jsp"%>
 <%@ include file="/WEB-INF/include/BreadcrumbView.jsp"%>
 <%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
@@ -25,26 +24,26 @@
 					<c:forEach var="product" items="${requestScope.productList}">
 						<tr>
 							<td class="product-thumbnail text-left"><img
-								src="./productImage/${product.id}.JPG" alt="Product Thumnail"></td>
+								src="./productImage/${product.key.id}.JPG" alt="Product Thumnail"></td>
 							<td class="product-name text-left wide-column">
 								<h3>
-									<a href="product-details.html">${product.name}</a>
+									<a href="product-details.html">${product.key.name}</a>
 								</h3>
 							</td>
 							<td class="product-price"><span
-								class="product-price-wrapper"> <span class="money">${product.price}</span>
+								class="product-price-wrapper"> <span class="money">${product.key.price}</span>
 							</span></td>
 							<td class="product-quantity">
 								<div class="quantity">
 									<input type="number" class="quantity-input" name="qty"
-										id="qty-${product.id}" value="1" min="1">
+										id="qty-${product.key.id}" value="${product.value}" min="1">
 								</div>
 							</td>
 							<td class="product-total-price"><span
 								class="product-price-wrapper"> <span class="money">$</span>
 							</span></td>
 							<td class="product-remove text-left"><input type="hidden"
-								name="productToRemove" value="${product.id}" /> <input
+								name="productToRemove" value="${product.key.id}" /> <input
 								type="submit" value="remove"></td>
 						</tr>
 					</c:forEach>

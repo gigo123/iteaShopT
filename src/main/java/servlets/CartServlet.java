@@ -49,17 +49,7 @@ public class CartServlet extends HttpServlet {
 			request.setAttribute("userName", session.getAttribute("userName"));
 		}
 		if (session.getAttribute("cart") != null) {
-			Map<Long, Integer> cartMap = (Map<Long, Integer>) session.getAttribute("cart");
-			List<Product> products = new ArrayList<Product>();
-			List<Integer> quantity = new ArrayList<Integer>();
-			DaoFactory df = new MySQLDAOFactory();
-			ProductDAO pd = df.getProductDAO();
-			for (long key : cartMap.keySet()) {
-				products.add(pd.getProductById(key));
-				quantity.add(cartMap.get(key));
-			}
-			request.setAttribute("productList", products);
-			request.setAttribute("quantityList", quantity);
+			request.setAttribute("productList", session.getAttribute("cart"));
 			if (session.getAttribute("cart_number") != null) {
 				request.setAttribute("items", session.getAttribute("cart_number"));
 			}
@@ -90,16 +80,16 @@ public class CartServlet extends HttpServlet {
 
 	@SuppressWarnings("unchecked")
 	private void cartMapProcessed(String type, long productId) {
-		Map<Long, Integer> cartMap;
+		Map<Product, Integer> cartMap;
 		if (session.getAttribute("cart") != null) {
 
-			cartMap = (Map<Long, Integer>) session.getAttribute("cart");
+			cartMap = (Map<Product, Integer>) session.getAttribute("cart");
 		} else{
-			cartMap = new HashMap<Long, Integer>();
+			cartMap = new HashMap<Product, Integer>();
 		}
 		boolean inCart = false;
-		for (long key : cartMap.keySet()) {
-			if (key == productId) {
+		for (Product key : cartMap.keySet()) {
+			if (key.getId() == productId) {
 				if (type.equals("remove")) {
 						cartMap.remove(key);	
 				} 
@@ -111,14 +101,16 @@ public class CartServlet extends HttpServlet {
 			}
 		}
 		if (!inCart) {
-			cartMap.put(productId, 1);
+			DaoFactory df = new MySQLDAOFactory();
+			ProductDAO pd = df.getProductDAO();
+			cartMap.put(pd.getProductById(productId), 1);
 		}
 		session.setAttribute("cart", cartMap);
 		session.setAttribute("cart_number",productsCount(cartMap));
 		return;
 	}
 
-	private int productsCount(Map<Long, Integer> cartMap) {
+	private int productsCount(Map<Product, Integer> cartMap) {
 		ArrayList<Integer> numbers = new ArrayList<Integer>(cartMap.values());
 		int sum = 0;
 		for (int n : numbers) {
