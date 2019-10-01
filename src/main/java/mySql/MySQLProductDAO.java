@@ -79,7 +79,6 @@ public class MySQLProductDAO implements ProductDAO {
 			}
 		}
 		return product;
-
 	}
 
 	@Override

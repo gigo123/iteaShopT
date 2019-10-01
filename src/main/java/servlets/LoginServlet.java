@@ -50,15 +50,20 @@ public class LoginServlet extends HttpServlet {
 		}
 		if (session.getAttribute("login") != null) {
 			DaoFactory df = new MySQLDAOFactory();
-			 UserDAO uersDAO = df.getUserDAO();
-			 User user = uersDAO.getUserByLogin((String) session.getAttribute("login"));
-			session.setAttribute("userName", user.getName() );
+			UserDAO uersDAO = df.getUserDAO();
+			User user = uersDAO.getUserByLogin((String) session.getAttribute("login"));
+			session.setAttribute("userName", user.getName());
 			response.sendRedirect("./product");
 
 		} else {
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/LoginView.jsp");
 			request.setAttribute("attempt", errorCounter);
 			request.setAttribute("page", "login");
+			if (session.getAttribute("cart_number") != null) {
+				request.setAttribute("items", session.getAttribute("cart_number"));
+			} else {
+				request.setAttribute("items", 0);
+			}
 			rd.forward(request, response);
 		}
 	}
@@ -81,15 +86,15 @@ public class LoginServlet extends HttpServlet {
 	private boolean checkCredials(String login, String password) {
 		boolean loginFailded = true;
 		DaoFactory df = new MySQLDAOFactory();
-		 UserDAO uersDAO = df.getUserDAO();
-			if (uersDAO.checkLoginPasswords(login, password)) {
-				errorCounter = 0;
-				loginFailded = false;
-			} else {
-				errorCounter++;
-				loginFailded = true;
-				checkBlock();
-			}
+		UserDAO uersDAO = df.getUserDAO();
+		if (uersDAO.checkLoginPasswords(login, password)) {
+			errorCounter = 0;
+			loginFailded = false;
+		} else {
+			errorCounter++;
+			loginFailded = true;
+			checkBlock();
+		}
 		return loginFailded;
 	}
 

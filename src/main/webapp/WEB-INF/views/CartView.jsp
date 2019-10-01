@@ -40,7 +40,7 @@
 								</div>
 							</td>
 							<td class="product-total-price"><span
-								class="product-price-wrapper"> <span class="money">$</span>
+								class="product-price-wrapper"> <span class="money">${product.value*product.key.price}</span>
 							</span></td>
 							<td class="product-remove text-left"><input type="hidden"
 								name="productToRemove" value="${product.key.id}" /> <input
@@ -64,7 +64,7 @@
 					<span>Total</span>
 				</div>
 				<div class="cart-calculator__item--value">
-					<span class="product-price-wrapper"> <span class="money">$226.00</span>
+					<span class="product-price-wrapper"> <span class="money">${totalSumm}</span>
 					</span>
 				</div>
 			</div>

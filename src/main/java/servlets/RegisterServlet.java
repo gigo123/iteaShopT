@@ -14,7 +14,6 @@ import dao.UserDAO;
 import models.User;
 import mySql.MySQLDAOFactory;
 
-
 /**
  * Servlet implementation class RegisterServlet
  */
@@ -65,13 +64,18 @@ public class RegisterServlet extends HttpServlet {
 			}
 		} else if (session.getAttribute("login") != null) {
 			DaoFactory df = new MySQLDAOFactory();
-			 uersDAO = df.getUserDAO();
-				user = uersDAO.getUserByLogin(session.getAttribute("login").toString());
-		
+			uersDAO = df.getUserDAO();
+			user = uersDAO.getUserByLogin(session.getAttribute("login").toString());
+
 			request.setAttribute("login", true);
 		} else {
 			user = new User();
 			request.setAttribute("login", false);
+		}
+		if (session.getAttribute("cart_number") != null) {
+			request.setAttribute("items", session.getAttribute("cart_number"));
+		} else {
+			request.setAttribute("items", 0);
 		}
 		request.setAttribute("page", "register");
 		request.setAttribute("user", user);
@@ -99,23 +103,24 @@ public class RegisterServlet extends HttpServlet {
 		String acceptOffer = request.getParameter("acceptOffer");
 		user = new User(login, password, name, region, convertGenderToBool(gender), comment);
 		DaoFactory df = new MySQLDAOFactory();
-		 uersDAO = df.getUserDAO();
-			checkErrors(session, password2, acceptOffer);
-			if (!error) {
-				if (session.getAttribute("login") != null) {
-					if(!uersDAO.updateUser(user, session.getAttribute("login").toString())) {
-						error = true;
-						errorText.append("<li>DataBase error</li>");
-					};
-				} else {
-					if(!uersDAO.insertUser(user)) {
-						error = true;
-						errorText.append("<li>DataBase error</li>");
-					}
+		uersDAO = df.getUserDAO();
+		checkErrors(session, password2, acceptOffer);
+		if (!error) {
+			if (session.getAttribute("login") != null) {
+				if (!uersDAO.updateUser(user, session.getAttribute("login").toString())) {
+					error = true;
+					errorText.append("<li>DataBase error</li>");
 				}
-				createUser = true;
-				session.setAttribute("login", login);
+				;
+			} else {
+				if (!uersDAO.insertUser(user)) {
+					error = true;
+					errorText.append("<li>DataBase error</li>");
+				}
 			}
+			createUser = true;
+			session.setAttribute("login", login);
+		}
 		doGet(request, response);
 	}
 

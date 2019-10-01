@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,9 +53,11 @@ public class CartServlet extends HttpServlet {
 			request.setAttribute("productList", session.getAttribute("cart"));
 			if (session.getAttribute("cart_number") != null) {
 				request.setAttribute("items", session.getAttribute("cart_number"));
+				request.setAttribute("totalSumm",totalCartSum((Map<Product, Integer>) session.getAttribute("cart")));
 			}
 		} else {
 			request.setAttribute("items", 0);
+			request.setAttribute("totalSumm", 0);
 		}
 		request.setAttribute("page", "cart");
 		rd.forward(request, response);
@@ -118,5 +121,15 @@ public class CartServlet extends HttpServlet {
 		}
 		return sum;
 	}
-
+	private int totalCartSum(Map<Product, Integer> cartMap) {
+		int sum =0;
+		Iterator<Map.Entry<Product, Integer>> itr = cartMap.entrySet().iterator(); 
+        
+        while(itr.hasNext()) 
+        { 
+             Map.Entry<Product, Integer> entry = itr.next(); 
+             sum = sum +entry.getKey().getPrice() * entry.getValue();   
+        } 	
+		return sum;
+	}
 }
