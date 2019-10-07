@@ -91,9 +91,19 @@ public class CartServlet extends HttpServlet {
 			cartMap = new HashMap<Product, Integer>();
 		}
 		boolean inCart = false;
-		for (Product key : cartMap.keySet()) {
-			if (key.getId() == productId) {
-				if (type.equals("remove")) {
+		
+		DaoFactory df = new MySQLDAOFactory();
+		ProductDAO pd = df.getProductDAO();
+		Product product =pd.getProductById(productId);
+		Integer  qnt = cartMap.get(product);
+			if(cartMap.containsKey(product)) {
+				cartMap.put(product, qnt);
+			}
+			else {
+				
+			}
+			cartMap.put(product,qnt);
+				/*if (type.equals("remove")) {
 						cartMap.remove(key);	
 				} 
 				if(type.equals("buy")){
@@ -102,12 +112,15 @@ public class CartServlet extends HttpServlet {
 				inCart = true;
 				break;
 			}
-		}
+		
 		if (!inCart) {
 			DaoFactory df = new MySQLDAOFactory();
 			ProductDAO pd = df.getProductDAO();
+			pd.getProductById(productId);
 			cartMap.put(pd.getProductById(productId), 1);
+			
 		}
+		*/
 		session.setAttribute("cart", cartMap);
 		session.setAttribute("cart_number",productsCount(cartMap));
 		return;
