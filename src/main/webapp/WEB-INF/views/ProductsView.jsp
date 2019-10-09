@@ -24,16 +24,54 @@
 					</div>
 					<p class="product-short-description mb--20">${product.description}</p>
 					<div class="ft-product-action-list d-flex align-items-center">
-						<form action="./cart" method="post">
-							<input type="hidden" name="productToBuy" value="${product.id}" />
-							<input type="submit" class="btn btn-size-md" value="add to cart" />
-						</form>
+						<img width="20px" src="./img/-.png" id="imgMinus"
+							onclick="minus(${product.id})" /> <span id="span${product.id}">1</span>
+						<img width="20px" src="./img/+.png" id="imgPlus"
+							onclick="plus(${product.id})" /> <input type="submit"
+							class="btn btn-size-md" value="add to cart"
+							id="buyButton${product.id}" value="Buy"
+							onclick="showProduct(${product.id})" />
 					</div>
 				</div>
 			</div>
 		</c:forEach>
 	</div>
 </div>
+
+<script>
+	function plus(id) {
+		var number = document.getElementById("span" + id).innerHTML;
+		number++;
+		document.getElementById("span" + id).innerHTML = number;
+	}
+	function minus(id) {
+		var number = document.getElementById("span" + id).innerHTML;
+		if(number>1){
+		number--;
+		document.getElementById("span" + id).innerHTML = number;
+		}
+		
+	}
+
+	function showProduct(id) {
+		var number = document.getElementById("span" + id).innerHTML;
+		$.ajax({
+					url : "./cart",
+					type : "POST",
+					dataType : "html",
+					data : {productToBuy: id,
+						numberOfGoods: number},
+					success : function(response) {
+					//	alert("response = " + response);
+				document.getElementById("numberGoods").innerHTML = response;
+					},
+					error : function(response) { // Данные не отправлены
+						document.getElementById(result_form).innerHTML = "Ошибка. Данные не отправленны.";
+					}
+				});
+		document.getElementById("span" + id).innerHTML ="1";
+	}
+</script>
 <!--  close div of SideMenuView -->
 </div>
 </div>

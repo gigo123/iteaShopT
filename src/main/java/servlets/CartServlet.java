@@ -53,7 +53,7 @@ public class CartServlet extends HttpServlet {
 			request.setAttribute("productList", session.getAttribute("cart"));
 			if (session.getAttribute("cart_number") != null) {
 				request.setAttribute("items", session.getAttribute("cart_number"));
-				request.setAttribute("totalSumm",totalCartSum((Map<Product, Integer>) session.getAttribute("cart")));
+				request.setAttribute("totalSumm", totalCartSum((Map<Product, Integer>) session.getAttribute("cart")));
 			}
 		} else {
 			request.setAttribute("items", 0);
@@ -71,58 +71,44 @@ public class CartServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		session = request.getSession();
-		if (request.getParameter("productToBuy") != null) {
-			cartMapProcessed("buy", Integer.parseInt(request.getParameter("productToBuy")));
-			response.sendRedirect("./product");
+		System.out.println(request.getParameter("productToBuy"));
+		System.out.println(request.getParameter("numberOfGoods"));
+		if (request.getParameter("productToBuy") != null && request.getParameter("numberOfGoods") != null) {
+			cartMapProcessed("buy", Integer.parseInt(request.getParameter("productToBuy")),
+					Integer.parseInt(request.getParameter("numberOfGoods")));
+			response.getWriter().write(session.getAttribute("cart_number").toString());
 		}
 		if (request.getParameter("productToRemove") != null) {
-			cartMapProcessed("remove", Integer.parseInt(request.getParameter("productToRemove")));
+			cartMapProcessed("remove", Integer.parseInt(request.getParameter("productToRemove")), 0);
 			doGet(request, response);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void cartMapProcessed(String type, long productId) {
+	private void cartMapProcessed(String type, long productId, int numberOfGoods) {
 		Map<Product, Integer> cartMap;
 		if (session.getAttribute("cart") != null) {
 
 			cartMap = (Map<Product, Integer>) session.getAttribute("cart");
-		} else{
+		} else {
 			cartMap = new HashMap<Product, Integer>();
 		}
-		boolean inCart = false;
-		
 		DaoFactory df = new MySQLDAOFactory();
 		ProductDAO pd = df.getProductDAO();
-		Product product =pd.getProductById(productId);
-		Integer  qnt = cartMap.get(product);
-			if(cartMap.containsKey(product)) {
-				cartMap.put(product, qnt);
+		Product product = pd.getProductById(productId);
+		if (type.equals("buy")) {
+			if (cartMap.containsKey(product)) {
+				numberOfGoods = numberOfGoods + cartMap.get(product);
 			}
-			else {
-				
-			}
-			cartMap.put(product,qnt);
-				/*if (type.equals("remove")) {
-						cartMap.remove(key);	
-				} 
-				if(type.equals("buy")){
-					cartMap.put(key, (int) cartMap.get(key) + 1);
-				}
-				inCart = true;
-				break;
-			}
-		
-		if (!inCart) {
-			DaoFactory df = new MySQLDAOFactory();
-			ProductDAO pd = df.getProductDAO();
-			pd.getProductById(productId);
-			cartMap.put(pd.getProductById(productId), 1);
-			
+			cartMap.put(product, numberOfGoods);
 		}
-		*/
+		if (type.equals("remove")) {
+			if (cartMap.containsKey(product)) {
+				cartMap.remove(product);
+			}
+		}
 		session.setAttribute("cart", cartMap);
-		session.setAttribute("cart_number",productsCount(cartMap));
+		session.setAttribute("cart_number", productsCount(cartMap));
 		return;
 	}
 
@@ -134,15 +120,15 @@ public class CartServlet extends HttpServlet {
 		}
 		return sum;
 	}
+
 	private int totalCartSum(Map<Product, Integer> cartMap) {
-		int sum =0;
-		Iterator<Map.Entry<Product, Integer>> itr = cartMap.entrySet().iterator(); 
-        
-        while(itr.hasNext()) 
-        { 
-             Map.Entry<Product, Integer> entry = itr.next(); 
-             sum = sum +entry.getKey().getPrice() * entry.getValue();   
-        } 	
+		int sum = 0;
+		Iterator<Map.Entry<Product, Integer>> itr = cartMap.entrySet().iterator();
+
+		while (itr.hasNext()) {
+			Map.Entry<Product, Integer> entry = itr.next();
+			sum = sum + entry.getKey().getPrice() * entry.getValue();
+		}
 		return sum;
 	}
 }

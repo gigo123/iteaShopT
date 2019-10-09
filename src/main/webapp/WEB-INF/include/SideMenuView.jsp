@@ -14,7 +14,7 @@
 								<c:if test="${login}">
 									Hello ${userName} <br />
 								</c:if>
-								you have ${items} goods in cart
+								you have <span id = "numberGoods">${items}</span> goods in cart
 							</div>
 							<a class="nav-link active" href="./product">Home</a> <a
 								class="nav-link" href="./product" aria-controls="orders"
