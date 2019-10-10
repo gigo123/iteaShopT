@@ -7,59 +7,55 @@
 <%@ include file="/WEB-INF/include/SideMenuView.jsp"%>
 <!-- Main Content Wrapper Start -->
 <div class="col-9">
-	<form class="cart-form" action="./cart" method="post">
-		<div class="table-content table-responsive">
-			<table class="table text-center">
-				<thead>
-					<tr>
-						<th>&nbsp;</th>
-						<th class="text-left">Product</th>
-						<th>price</th>
-						<th>quantity</th>
-						<th>total</th>
-						<th>remove</th>
+	<div class="table-content table-responsive">
+		<table class="table text-center">
+			<thead>
+				<tr>
+					<th>&nbsp;</th>
+					<th class="text-left">Product</th>
+					<th>price</th>
+					<th>quantity</th>
+					<th>total</th>
+					<th>remove</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="product" items="${requestScope.productList}">
+					<tr id="productRow${product.key.id}">
+						<td class="product-thumbnail text-left"><img
+							src="./productImage/${product.key.id}.JPG" alt="Product Thumnail"></td>
+						<td class="product-name text-left wide-column">
+							<h3>
+								<a href="product-details.html">${product.key.name}</a>
+							</h3>
+						</td>
+						<td class="product-price"><span class="product-price-wrapper">
+								<span class="money" id="price${product.key.id}">${product.key.price}</span>
+						</span></td>
+						<td class="product-quantity"><img width="20px"
+							src="./img/-.png" id="imgMinus"
+							onclick="minus(${product.key.id})" /> <span
+							id="span${product.key.id}">${product.value}</span> <img
+							width="20px" src="./img/+.png" id="imgPlus"
+							onclick="plus(${product.key.id})" /></td>
+						<td class="product-total-price"><span
+							class="product-price-wrapper"> <span class="money"
+								id="totalPrice${product.key.id}">${product.value*product.key.price}</span>
+						</span></td>
+						<td class="product-remove text-left"><input type="hidden"
+							name="productToRemove" value="${product.key.id}" /> <input
+							type="submit" value="remove"
+							onclick="removeProduct(${product.key.id})"></td>
 					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="product" items="${requestScope.productList}">
-						<tr>
-							<td class="product-thumbnail text-left"><img
-								src="./productImage/${product.key.id}.JPG"
-								alt="Product Thumnail"></td>
-							<td class="product-name text-left wide-column">
-								<h3>
-									<a href="product-details.html">${product.key.name}</a>
-								</h3>
-							</td>
-							<td class="product-price"><span
-								class="product-price-wrapper" > <span class="money" id ="price${product.key.id}">${product.key.price}</span>
-							</span></td>
-							<td class="product-quantity">
-								<div class="quantity">
-									<img width="20px" src="./img/-.png" id="imgMinus"
-										onclick="minus(${product.key.id})" />
-										 <span id="span${product.key.id}">${product.value}</span> 
-										<img width="20px"
-										src="./img/+.png" id="imgPlus" onclick="plus(${product.key.id})" />
-								</div>
-							</td>
-							<td class="product-total-price"><span
-								class="product-price-wrapper"> <span class="money" id ="totalPrice${product.key.id}">${product.value*product.key.price}</span>
-							</span></td>
-							<td class="product-remove text-left"><input type="hidden"
-								name="productToRemove" value="${product.key.id}" /> <input
-								type="submit" value="remove"></td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
+	<div class="row no-gutters border-top pt--20 mt--20">
+		<div class="col-sm-6 text-sm-right">
+			<button type="submit" class="cart-form__btn">Clear Cart</button>
 		</div>
-		<div class="row no-gutters border-top pt--20 mt--20">
-			<div class="col-sm-6 text-sm-right">
-				<button type="submit" class="cart-form__btn">Clear Cart</button>
-			</div>
-		</div>
-	</form>
+	</div>
 	<div class="cart-collaterals">
 		<div class="cart-totals">
 			<h5 class="font-size-14 font-bold mb--15">Cart totals</h5>
@@ -68,7 +64,8 @@
 					<span>Total</span>
 				</div>
 				<div class="cart-calculator__item--value">
-					<span class="product-price-wrapper"> <span class="money" id = "totalSum">${totalSumm}</span>
+					<span class="product-price-wrapper"> <span class="money"
+						id="totalSum">${totalSumm}</span>
 					</span>
 				</div>
 			</div>
@@ -104,8 +101,28 @@
 					data : {productToChange: id,
 						numberOfGoods: number},
 					success : function(responseJson) {
-						alert("response = " + responseJson);
-				document.getElementById("numberGoods").innerHTML = responseJson["numberOfGoods"];
+					var returnedData = JSON.parse(responseJson);
+				document.getElementById("numberGoods").innerHTML = returnedData["numberOfGoods"];
+				document.getElementById("totalSum").innerHTML = returnedData["totalCartSum"];
+				document.getElementById("totalPrice" + id).innerHTML = number * document.getElementById("price" + id).innerHTML;
+					},
+					error : function(response) { // Данные не отправлены
+						document.getElementById(result_form).innerHTML = "Ошибка. Данные не отправленны.";
+					}
+				});
+				
+	}
+	function removeProduct(id) {
+		document.getElementById("productRow" +id ).innerHTML ="";
+		$.ajax({
+					url : "./cart",
+					type : "POST",
+					dataType : "html",
+					data : {productToRemove: id},
+					success : function(responseJson) {
+						var returnedData = JSON.parse(responseJson);
+				document.getElementById("numberGoods").innerHTML = returnedData["numberOfGoods"];
+				document.getElementById("totalSum").innerHTML = returnedData["totalCartSum"];
 					},
 					error : function(response) { // Данные не отправлены
 						document.getElementById(result_form).innerHTML = "Ошибка. Данные не отправленны.";

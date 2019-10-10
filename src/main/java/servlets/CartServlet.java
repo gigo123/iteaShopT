@@ -79,21 +79,27 @@ public class CartServlet extends HttpServlet {
 					Integer.parseInt(request.getParameter("numberOfGoods")));
 			response.getWriter().write(session.getAttribute("cart_number").toString());
 		}
-		if(request.getParameter("productToChange") != null && request.getParameter("numberOfGoods") != null) {
-			cartMapProcessed("buy", Integer.parseInt(request.getParameter("productToChange")),
+		if (request.getParameter("productToChange") != null && request.getParameter("numberOfGoods") != null) {
+			cartMapProcessed("change", Integer.parseInt(request.getParameter("productToChange")),
 					Integer.parseInt(request.getParameter("numberOfGoods")));
-			String cartResponseJson = "{\"numberOfGoods\":\""+session.getAttribute("cart_number").toString() +
-					"\",\"totalCartSum\":\"" +totalCartSum()+"\"}" ;
-		System.out.println(cartResponseJson);
-	        PrintWriter out = response.getWriter();
-	        response.setContentType("application/json");
-	        response.setCharacterEncoding("UTF-8");
-	        out.write(cartResponseJson);
-	        out.flush(); 
+			String cartResponseJson = "{\"numberOfGoods\":\"" + session.getAttribute("cart_number").toString()
+					+ "\",\"totalCartSum\":\"" + totalCartSum() + "\"}";
+			System.out.println(cartResponseJson);
+			PrintWriter out = response.getWriter();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			out.write(cartResponseJson);
+			out.flush();
 		}
 		if (request.getParameter("productToRemove") != null) {
 			cartMapProcessed("remove", Integer.parseInt(request.getParameter("productToRemove")), 0);
-			doGet(request, response);
+			String cartResponseJson = "{\"numberOfGoods\":\"" + session.getAttribute("cart_number").toString()
+					+ "\",\"totalCartSum\":\"" + totalCartSum() + "\"}";
+			PrintWriter out = response.getWriter();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			out.write(cartResponseJson);
+			out.flush();
 		}
 	}
 
@@ -120,6 +126,9 @@ public class CartServlet extends HttpServlet {
 				cartMap.remove(product);
 			}
 		}
+		if (type.equals("change")) {
+			cartMap.put(product, numberOfGoods);
+		}
 		session.setAttribute("cart", cartMap);
 		session.setAttribute("cart_number", productsCount(cartMap));
 		return;
@@ -144,16 +153,19 @@ public class CartServlet extends HttpServlet {
 		}
 		return sum;
 	}
+
 	private int totalCartSum() {
 		Map<Product, Integer> cartMap;
-		cartMap = (Map<Product, Integer>) session.getAttribute("cart");
 		int sum = 0;
+		cartMap = (Map<Product, Integer>) session.getAttribute("cart");
+
 		Iterator<Map.Entry<Product, Integer>> itr = cartMap.entrySet().iterator();
 
 		while (itr.hasNext()) {
 			Map.Entry<Product, Integer> entry = itr.next();
 			sum = sum + entry.getKey().getPrice() * entry.getValue();
 		}
+
 		return sum;
 	}
 }
