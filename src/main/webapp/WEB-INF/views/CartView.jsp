@@ -24,23 +24,27 @@
 					<c:forEach var="product" items="${requestScope.productList}">
 						<tr>
 							<td class="product-thumbnail text-left"><img
-								src="./productImage/${product.key.id}.JPG" alt="Product Thumnail"></td>
+								src="./productImage/${product.key.id}.JPG"
+								alt="Product Thumnail"></td>
 							<td class="product-name text-left wide-column">
 								<h3>
 									<a href="product-details.html">${product.key.name}</a>
 								</h3>
 							</td>
 							<td class="product-price"><span
-								class="product-price-wrapper"> <span class="money">${product.key.price}</span>
+								class="product-price-wrapper" > <span class="money" id ="price${product.key.id}">${product.key.price}</span>
 							</span></td>
 							<td class="product-quantity">
 								<div class="quantity">
-									<input type="number" class="quantity-input" name="qty"
-										id="qty-${product.key.id}" value="${product.value}" min="1">
+									<img width="20px" src="./img/-.png" id="imgMinus"
+										onclick="minus(${product.key.id})" />
+										 <span id="span${product.key.id}">${product.value}</span> 
+										<img width="20px"
+										src="./img/+.png" id="imgPlus" onclick="plus(${product.key.id})" />
 								</div>
 							</td>
 							<td class="product-total-price"><span
-								class="product-price-wrapper"> <span class="money">${product.value*product.key.price}</span>
+								class="product-price-wrapper"> <span class="money" id ="totalPrice${product.key.id}">${product.value*product.key.price}</span>
 							</span></td>
 							<td class="product-remove text-left"><input type="hidden"
 								name="productToRemove" value="${product.key.id}" /> <input
@@ -64,15 +68,51 @@
 					<span>Total</span>
 				</div>
 				<div class="cart-calculator__item--value">
-					<span class="product-price-wrapper"> <span class="money">${totalSumm}</span>
+					<span class="product-price-wrapper"> <span class="money" id = "totalSum">${totalSumm}</span>
 					</span>
 				</div>
 			</div>
 		</div>
 	</div>
 	<a href="checkout.html"
-		class="btn btn-size-md btn-shape-square btn-fullwidth"> Proceed To Checkout </a>
+		class="btn btn-size-md btn-shape-square btn-fullwidth"> Proceed To
+		Checkout </a>
 </div>
+<script>
+// script for numbers
+	function plus(id) {
+		var number = document.getElementById("span" + id).innerHTML;
+		number++;
+		document.getElementById("span" + id).innerHTML = number;
+		showProduct(id)
+	}
+	function minus(id) {
+		var number = document.getElementById("span" + id).innerHTML;
+		if(number>1){
+		number--;
+		document.getElementById("span" + id).innerHTML = number;
+		showProduct(id);
+		}
+		
+	}
+	function showProduct(id) {
+		var number = document.getElementById("span" + id).innerHTML;
+		$.ajax({
+					url : "./cart",
+					type : "POST",
+					dataType : "html",
+					data : {productToChange: id,
+						numberOfGoods: number},
+					success : function(responseJson) {
+						alert("response = " + responseJson);
+				document.getElementById("numberGoods").innerHTML = responseJson["numberOfGoods"];
+					},
+					error : function(response) { // Данные не отправлены
+						document.getElementById(result_form).innerHTML = "Ошибка. Данные не отправленны.";
+					}
+				});
+	}
+</script>
 <!--  close div of SideMenuView -->
 </div>
 </div>

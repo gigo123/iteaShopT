@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,6 +79,18 @@ public class CartServlet extends HttpServlet {
 					Integer.parseInt(request.getParameter("numberOfGoods")));
 			response.getWriter().write(session.getAttribute("cart_number").toString());
 		}
+		if(request.getParameter("productToChange") != null && request.getParameter("numberOfGoods") != null) {
+			cartMapProcessed("buy", Integer.parseInt(request.getParameter("productToChange")),
+					Integer.parseInt(request.getParameter("numberOfGoods")));
+			String cartResponseJson = "{\"numberOfGoods\":\""+session.getAttribute("cart_number").toString() +
+					"\",\"totalCartSum\":\"" +totalCartSum()+"\"}" ;
+		System.out.println(cartResponseJson);
+	        PrintWriter out = response.getWriter();
+	        response.setContentType("application/json");
+	        response.setCharacterEncoding("UTF-8");
+	        out.write(cartResponseJson);
+	        out.flush(); 
+		}
 		if (request.getParameter("productToRemove") != null) {
 			cartMapProcessed("remove", Integer.parseInt(request.getParameter("productToRemove")), 0);
 			doGet(request, response);
@@ -122,6 +135,18 @@ public class CartServlet extends HttpServlet {
 	}
 
 	private int totalCartSum(Map<Product, Integer> cartMap) {
+		int sum = 0;
+		Iterator<Map.Entry<Product, Integer>> itr = cartMap.entrySet().iterator();
+
+		while (itr.hasNext()) {
+			Map.Entry<Product, Integer> entry = itr.next();
+			sum = sum + entry.getKey().getPrice() * entry.getValue();
+		}
+		return sum;
+	}
+	private int totalCartSum() {
+		Map<Product, Integer> cartMap;
+		cartMap = (Map<Product, Integer>) session.getAttribute("cart");
 		int sum = 0;
 		Iterator<Map.Entry<Product, Integer>> itr = cartMap.entrySet().iterator();
 
