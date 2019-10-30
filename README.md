@@ -6,6 +6,7 @@ Now, the following online store pages implemented:
 - Profile creation page;
 - Authorization page;
 - Ordering page.
+
 The following processes implemented:
 - User creation
 - Edit user data
