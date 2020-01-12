@@ -40,6 +40,7 @@ Enter command
  or open it in JAVA IDE, and run build in it
 ### Deploy project
 After build of the project build, a WAR file created. This file must be hosted on a java web server (I'm using Apache Tomcat).
+The database must be created. In file database describe structure of it. File  iteashop.sql is dump of testing date used by me 
 ### Run project
 To access Store you must enter the url  “ path_to_you_ server/iteaShopT/ “in your browser ( like localhost:8080/iteaShopT/  for Tomcat)
 
